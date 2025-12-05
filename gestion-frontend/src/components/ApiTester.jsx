@@ -88,6 +88,18 @@ export default function ApiTester() {
   const [deleteAsignaturaId, setDeleteAsignaturaId] = useState('')
   const [deleteProgramaId, setDeleteProgramaId] = useState('')
 
+  // Inputs para operaciones Moodle
+const [syncAlumnoId, setSyncAlumnoId] = useState('');
+const [syncDocenteId, setSyncDocenteId] = useState('');
+const [syncAsignaturaId, setSyncAsignaturaId] = useState('');
+
+const [enrolAlumnoId, setEnrolAlumnoId] = useState('');
+const [enrolCourseId, setEnrolCourseId] = useState('');
+
+const [assignDocenteId, setAssignDocenteId] = useState('');
+const [assignCourseId, setAssignCourseId] = useState('');
+
+
   const [newPrograma, setNewPrograma] = useState({ nombre: '', numCuatrimestres: 4 })
   const [updateProgramaId, setUpdateProgramaId] = useState('')
   const [updatePrograma, setUpdatePrograma] = useState({ nombre: '', numCuatrimestres: 4 })
@@ -236,9 +248,142 @@ export default function ApiTester() {
 
       <section className="controls">
         <div className="row">
-          <button onClick={() => call('/api/moodle/config')}>Traer Config Moodle</button>
-          <button onClick={() => call('/api/moodle/test')}>Probar Moodle</button>
-          <button onClick={() => call('/api/moodle/sync/alumnos/all', { method: 'POST' })}>Sincronizar Alumnos</button>
+          {/* ============================
+      Acciones básicas
+  ============================ */}
+  <div className="row">
+    <button onClick={() => call('/api/moodle/config')}>
+      Traer Config Moodle
+    </button>
+
+    <button onClick={() => call('/api/moodle/test')}>
+      Probar Moodle
+    </button>
+
+    <button onClick={() => call('/api/moodle/sync/alumnos/all', { method: 'POST' })}>
+      Sincronizar Alumnos
+    </button>
+  </div>
+
+  {/* ============================
+      Sincronizar Alumno
+  ============================ */}
+  <div className="row">
+    <input
+      type="number"
+      placeholder="ID Alumno"
+      value={syncAlumnoId}
+      onChange={(e) => setSyncAlumnoId(e.target.value)}
+    />
+
+    <button
+      onClick={() =>
+        call(`/api/moodle/sync/alumno/${syncAlumnoId}`, { method: 'POST' })
+      }
+    >
+      Sync Alumno
+    </button>
+  </div>
+
+  {/* ============================
+      Sincronizar Docente
+  ============================ */}
+  <div className="row">
+    <input
+      type="number"
+      placeholder="ID Docente"
+      value={syncDocenteId}
+      onChange={(e) => setSyncDocenteId(e.target.value)}
+    />
+
+    <button
+      onClick={() =>
+        call(`/api/moodle/sync/docente/${syncDocenteId}`, { method: 'POST' })
+      }
+    >
+      Sync Docente
+    </button>
+  </div>
+
+  {/* ============================
+      Sincronizar Asignatura
+  ============================ */}
+  <div className="row">
+    <input
+      type="number"
+      placeholder="ID Asignatura"
+      value={syncAsignaturaId}
+      onChange={(e) => setSyncAsignaturaId(e.target.value)}
+    />
+
+    <button
+      onClick={() =>
+        call(`/api/moodle/sync/asignatura/${syncAsignaturaId}`, { method: 'POST' })
+      }
+    >
+      Sync Asignatura
+    </button>
+  </div>
+
+  {/* ============================
+      Matricular Alumno en Curso
+  ============================ */}
+  <div className="row">
+    <input
+      type="number"
+      placeholder="ID Alumno"
+      value={enrolAlumnoId}
+      onChange={(e) => setEnrolAlumnoId(e.target.value)}
+    />
+
+    <input
+      type="number"
+      placeholder="ID Curso"
+      value={enrolCourseId}
+      onChange={(e) => setEnrolCourseId(e.target.value)}
+    />
+
+    <button
+      onClick={() =>
+        call(
+          `/api/moodle/enrol/alumno/${enrolAlumnoId}/course/${enrolCourseId}`,
+          { method: 'POST' }
+        )
+      }
+    >
+      Matricular Alumno
+    </button>
+  </div>
+
+  {/* ============================
+      Asignar Docente a Curso
+  ============================ */}
+  <div className="row">
+    <input
+      type="number"
+      placeholder="ID Docente"
+      value={assignDocenteId}
+      onChange={(e) => setAssignDocenteId(e.target.value)}
+    />
+
+    <input
+      type="number"
+      placeholder="ID Curso"
+      value={assignCourseId}
+      onChange={(e) => setAssignCourseId(e.target.value)}
+    />
+
+    <button
+      onClick={() =>
+        call(
+          `/api/moodle/enrol/docente/${assignDocenteId}/course/${assignCourseId}`,
+          { method: 'POST' }
+        )
+      }
+    >
+      Asignar Docente
+    </button>
+  </div>
         </div>
 
         <div className="row">
