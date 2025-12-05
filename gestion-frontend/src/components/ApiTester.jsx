@@ -7,18 +7,14 @@ const API_BASE = 'http://localhost:8080'
 function prettyOutput(data) {
   if (!data) return "";
 
-  // Si es lista
+  // Si es array -> imprimir lista de tarjetas
   if (Array.isArray(data)) {
     return data
-      .map(item =>
-        Object.entries(item)
-          .map(([k, v]) => `${k}: ${v}`)
-          .join("\n")
-      )
+      .map(item => formatObject(item))
       .join("\n--------------------\n\n");
   }
 
-  // Si es objeto con listas (por ejemplo: { total: X, programas: [...] })
+  // Si es objeto -> puede contener objetos, listas o valores simples
   if (typeof data === "object") {
     let text = "";
 
@@ -26,12 +22,10 @@ function prettyOutput(data) {
       if (Array.isArray(value)) {
         text += `${key.toUpperCase()}: ${value.length}\n\n`;
         text += value
-          .map(item =>
-            Object.entries(item)
-              .map(([k, v]) => `${k}: ${v}`)
-              .join("\n")
-          )
+          .map(item => formatObject(item))
           .join("\n--------------------\n\n");
+      } else if (typeof value === "object") {
+        text += `${key.toUpperCase()}:\n${formatObject(value)}\n\n`;
       } else {
         text += `${key}: ${value}\n`;
       }
@@ -41,6 +35,13 @@ function prettyOutput(data) {
   }
 
   return String(data);
+}
+
+// ---- Función auxiliar para imprimir objetos como tarjetas ----
+function formatObject(obj) {
+  return Object.entries(obj)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join("\n");
 }
 
 
@@ -258,8 +259,8 @@ export default function ApiTester() {
         <div className="row">
           <input id="docenteId" placeholder="ID" />
           <button onClick={() => { const id = document.getElementById('docenteId').value || '1'; call(`/api/docentes/${id}`) }}>Traer Docente por ID</button>
-          <input id="docenteSearch" placeholder="Buscar" />
-          <button onClick={() => { const q = document.getElementById('docenteSearch').value || 'garcia'; call(`/api/docentes/search?q=${encodeURIComponent(q)}`) }}>Buscar Docentes</button>
+          <input id="docenteSearch" placeholder="Nombre/Apellido" />
+          <button onClick={() => { const q = document.getElementById('docenteSearch').value || 'garcia'; call(`/api/docentes/search?q=${encodeURIComponent(q)}`) }}>Buscar Docentes por Nombre o Apellido</button>
         </div>
 
       </section>
